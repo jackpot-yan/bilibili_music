@@ -1,0 +1,1 @@
+pub const LOGINURL: &str = "https://passport.bilibili.com/x/passport-login/web/key";
