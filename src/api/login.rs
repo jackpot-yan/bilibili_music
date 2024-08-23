@@ -7,6 +7,7 @@ pub fn login() -> bool {
         Ok(res) => {
             let data_json:Passport = res.into_json().unwrap();
             println!("{:?}", data_json);
+            println!("helol");
             true
         }
         Err(err) => {
