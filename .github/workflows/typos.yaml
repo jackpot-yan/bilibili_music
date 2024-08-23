@@ -18,7 +18,7 @@ jobs:
       uses: crate-ci/typos@master
       with:
         files: ./
-        config: ./typos.toml
+        config: typos.toml
 
     - name: Writes changes in the local checkout
       uses: crate-ci/typos@master
