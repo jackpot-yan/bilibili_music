@@ -7,6 +7,6 @@ pub struct Passport {
 
 #[derive(Deserialize, Debug, Default)]
 pub struct PassData {
-    pub hash: String,
+    pub hssh: String,
     pub key: String
 }
