@@ -1,29 +1,17 @@
 use crate::config;
-use ureq;
-use serde_json;
-use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
-struct Passport {
-    data: PassData
-}
+use super::dto::Passport;
 
-#[derive(Deserialize, Debug)]
-struct PassData {
-    hash: String,
-    key: String,
-}
-
-pub fn login() {
-    match ureq::get(config::LOGINURL).call() {
+pub fn login() -> bool {
+    match ureq::get(config::PASSURL).call() {
         Ok(res) => {
-            let data = res.into_string().unwrap_or_default();
-            let data_json:Passport = serde_json::from_str(&data).unwrap();
-            println!("{}", data_json.data.hash);
-            println!("{}", data_json.data.key);
-        },
+            let data_json:Passport = res.into_json().unwrap();
+            println!("{:?}", data_json);
+            true
+        }
         Err(err) => {
-            println!("{}", err)
-        },
-    };
+            println!("{}", err);
+            false
+        }
+    }
 }

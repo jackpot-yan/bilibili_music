@@ -2,5 +2,6 @@ use bilibili_music::api;
 
 
 fn main() {
-    api::login::login()
+    let ok = api::login::login();
+    println!("{}", ok)
 }
