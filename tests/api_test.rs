@@ -11,6 +11,7 @@ impl TestContext for Login {
         Login {key: "hello".to_string()}
     }
     fn teardown(self) {
+        println!("hello,world")
     }
 }
 
