@@ -1,10 +1,8 @@
 [files]
-binary = false
 extend-exclude = []
 ignore-hidden = true
 
 [default]
-binary = false
 check-filename = true
 check-file = true
 locale = "en"
