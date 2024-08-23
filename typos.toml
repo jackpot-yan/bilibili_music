@@ -1,20 +1,11 @@
-[files]
-extend-exclude = []
-ignore-hidden = true
-ignore-files = true
-ignore-dot = true
-ignore-vcs = true
-ignore-global = true
-ignore-parent = true
-
-[default]
+[type.rust]
 binary = false
 check-filename = true
 check-file = true
 unicode = true
 ignore-hex = true
 identifier-leading-digits = false
-locale = "us"
+locale = "en-us"
 extend-ignore-identifiers-re = []
 extend-ignore-words-re = []
 extend-ignore-re = []
