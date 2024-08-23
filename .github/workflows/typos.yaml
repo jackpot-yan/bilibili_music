@@ -11,13 +11,5 @@ jobs:
 
     - name: Check spelling
       uses: crate-ci/typos@master
-
-    - name: Use custom config file
-      uses: crate-ci/typos@master
       with:
         config: ./typos.toml
-
-    - name: Writes changes in the local checkout
-      uses: crate-ci/typos@master
-      with:
-        write_changes: true
