@@ -6,6 +6,3 @@ unicode = true
 ignore-hex = true
 identifier-leading-digits = true
 locale = "en-us"
-extend-ignore-identifiers-re = []
-extend-ignore-words-re = []
-extend-ignore-re = []
