@@ -1,10 +1,10 @@
 [type.rust]
-binary = false
+binary = true
 check-filename = true
 check-file = true
 unicode = true
 ignore-hex = true
-identifier-leading-digits = false
+identifier-leading-digits = true
 locale = "en-us"
 extend-ignore-identifiers-re = []
 extend-ignore-words-re = []
