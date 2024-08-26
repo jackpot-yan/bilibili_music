@@ -5,8 +5,8 @@ use super::dto::Passport;
 pub fn login() -> bool {
     match ureq::get(config::PASSURL).call() {
         Ok(res) => {
-            let successed:Passport = res.into_json().unwrap();
-            println!("{:?}",  successed);
+            let pass_port:Passport = res.into_json().unwrap();
+            println!("{:?}",  pass_port);
             true
         }
         Err(err) => {
