@@ -12,12 +12,12 @@ jobs:
     - name: Check spelling
       uses: crate-ci/typos@master
       with:
-        files: ["*"]
+        files: ./
 
     - name: Use custom config file
       uses: crate-ci/typos@master
       with:
-        files: ["*"]
+        files: ./
         config: ./typos.toml
 
     - name: Writes changes in the local checkout

@@ -1,0 +1,8 @@
+[files]
+extend-exclude = []
+ignore-hidden = true
+
+[typos.rust]
+check-filename = true
+check-file = true
+locale = "en"
