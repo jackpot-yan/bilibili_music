@@ -1,5 +1,7 @@
 [files]
-extend-exclude = []
+extend-exclude = [
+    "test/"
+]
 ignore-hidden = true
 
 [typos.rust]
