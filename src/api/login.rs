@@ -1,8 +1,15 @@
 use crate::config;
+use base64::engine::general_purpose;
+use base64::Engine;
+use rsa::pkcs8::DecodePublicKey;
+use rsa::{Pkcs1v15Encrypt, RsaPublicKey};
+use std::env;
 use std::io::Error;
+use std::time::{SystemTime, UNIX_EPOCH};
 use ureq::Error as ureqError;
 
-use super::login_req::Validate;
+use super::args::AppKeyStore;
+use super::login_req::{self, Validate};
 use super::login_res::{Captcha, Passport, ValidateRes};
 
 fn get_salt() -> Result<Passport, ureqError> {
@@ -24,7 +31,7 @@ fn get_captcha() -> Result<Captcha, ureqError> {
 fn verify(req: Validate) -> Result<ValidateRes, ureqError> {
     match ureq::post(config::VAILDATE).send_json(ureq::json!(req)) {
         Ok(res) => {
-            let data_json:ValidateRes = res.into_json()?;
+            let data_json: ValidateRes = res.into_json()?;
             return Ok(data_json);
         }
         Err(err) => {
@@ -33,17 +40,46 @@ fn verify(req: Validate) -> Result<ValidateRes, ureqError> {
     }
 }
 
+fn get_user() -> (String, String) {
+    let user = env::var("b_user").unwrap_or_default();
+    let password = env::var("b_password").unwrap_or_default();
+    (user, password)
+}
+
 pub fn login() -> Result<(), ureqError> {
+    let mut rand_png = rand::thread_rng();
     let salt = get_salt()?;
-    let captcha = get_captcha()?;
-    println!("{:?}", captcha);
-    let val = Validate {
-        tmp_code: config::TMPCODE.to_string(),
-        sms_type: config::SMSTYPE.to_string(),
-        recaptcha_token: captcha.data.recaptcha_token,
-        gee_challenge: captcha.data.gee_challenge,
+    let (user, password) = get_user();
+    let pub_key = RsaPublicKey::from_public_key_pem(&salt.data.key).unwrap();
+    let enc_data = pub_key
+        .encrypt(
+            &mut rand_png,
+            Pkcs1v15Encrypt,
+            (salt.data.hash + &password).as_bytes(),
+        )
+        .unwrap_or_default();
+    let enc_password = general_purpose::STANDARD_NO_PAD.encode(enc_data);
+    let payload = login_req::LoginReq {
+        actionKey: "appkey".to_string(),
+        appKey: AppKeyStore::Android.app_key().to_string(),
+        build: 6270200,
+        captcha: "".to_string(),
+        challenge: "".to_string(),
+        channel: "bili".to_string(),
+        device: "phone".to_string(),
+        mobi_app: "android".to_string(),
+        password: password,
+        permission: "ALL".to_string(),
+        platform: "android".to_string(),
+        seccode: "".to_string(),
+        subid: 1,
+        ts: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs(),
+        username: user,
+        validate: "".to_string(),
     };
-    let verify = verify(val);
-    print!("{:?}", verify);
+    let payload_encode = serde_json::to_string(&payload).unwrap();
     Ok(())
 }
