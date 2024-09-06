@@ -6,6 +6,8 @@ edition = "2021"
 
 [dependencies]
 base64 = "0.22.1"
+digest = { version = "0.10.7", features = ["alloc"] }
+md-5 = "0.10.6"
 rand = "0.8.5"
 rsa = "0.9.6"
 serde = { version = "1.0.208", features = ["derive"] }

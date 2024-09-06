@@ -3,3 +3,4 @@ pub const CAPTCHA: &str = "https://passport.bilibili.com/x/safecenter/captcha/pr
 pub const TMPCODE:&str = "imtmptk";
 pub const SMSTYPE:&str = "loginTelCheck";
 pub const VAILDATE: &str = "https://passport.bilibili.com/x/safecenter/common/sms/send";
+pub const PASSWORDLOGIN: &str = "https://passport.bilibili.com/x/passport-login/oauth2/login";

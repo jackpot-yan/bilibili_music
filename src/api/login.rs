@@ -6,7 +6,7 @@ use rsa::{Pkcs1v15Encrypt, RsaPublicKey};
 use std::env;
 use std::io::Error;
 use std::time::{SystemTime, UNIX_EPOCH};
-use ureq::Error as ureqError;
+use ureq::{json, Error as ureqError};
 
 use super::args::AppKeyStore;
 use super::login_req::{self, Validate};
@@ -59,27 +59,41 @@ pub fn login() -> Result<(), ureqError> {
         )
         .unwrap_or_default();
     let enc_password = general_purpose::STANDARD_NO_PAD.encode(enc_data);
-    let payload = login_req::LoginReq {
-        actionKey: "appkey".to_string(),
-        appKey: AppKeyStore::Android.app_key().to_string(),
-        build: 6270200,
-        captcha: "".to_string(),
-        challenge: "".to_string(),
-        channel: "bili".to_string(),
-        device: "phone".to_string(),
-        mobi_app: "android".to_string(),
-        password: password,
-        permission: "ALL".to_string(),
-        platform: "android".to_string(),
-        seccode: "".to_string(),
-        subid: 1,
-        ts: SystemTime::now()
+    let mut payload = json!({
+        "actionKey": "appkey".to_string(),
+        "appKey": AppKeyStore::Android.app_key().to_string(),
+        "build": 6270200,
+        "captcha": "".to_string(),
+        "challenge": "".to_string(),
+        "channel": "bili".to_string(),
+        "device": "phone".to_string(),
+        "mobi_app": "android".to_string(),
+        "password": enc_password,
+        "permission": "ALL".to_string(),
+        "platform": "android".to_string(),
+        "seccode": "".to_string(),
+        "subid": 1,
+        "ts": SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_secs(),
-        username: user,
-        validate: "".to_string(),
-    };
+        "username": user,
+        "validate": "".to_string(),
+    });
     let payload_encode = serde_json::to_string(&payload).unwrap();
+    let sign = AppKeyStore::sign(&payload_encode, AppKeyStore::Android.app_sec());
+    payload["sign"] = serde_json::Value::from(sign);
+    match ureq::post(config::PASSWORDLOGIN).send_json(payload) {
+        Ok(res) => {
+            if res.status() != 200 {
+                println!("{:?}", res)
+            }
+            println!("success");
+            println!("{:?}", res.into_string());
+        },
+        Err(err) => {
+            println!("{:?}", err)
+        },
+    };
     Ok(())
 }

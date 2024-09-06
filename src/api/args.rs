@@ -1,3 +1,5 @@
+use md5::{Digest, Md5};
+
 pub(crate) enum AppKeyStore {
     BiliTV,
     Android
@@ -18,6 +20,9 @@ impl AppKeyStore {
         }
     }
 
-    // pub fn sign(param:&str, app_sec:&str) -> String {
-    // }
+    pub fn sign(param:&str, app_sec:&str) -> String {
+        let mut hasher = Md5::new();
+        hasher.update(format!("{}{}", param, app_sec));
+        format!("{:x}", hasher.finalize())
+    }
 }

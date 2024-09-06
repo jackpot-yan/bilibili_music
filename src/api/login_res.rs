@@ -39,3 +39,10 @@ pub struct ValidateRes {
 pub struct VaildateKey {
     pub key: String,
 }
+
+#[derive(Deserialize, Default, Debug)]
+pub struct LoginRes {
+    pub code: i16,
+    pub message: String,
+    pub ttl:i8
+}
